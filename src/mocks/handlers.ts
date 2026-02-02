@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { UserInput, userSchema } from '@/schemas/userSchema';
 
 export const handlers = [
-  http.post('http://localhost:8080/users/', async ({ request }) => {
+  http.post('/users', async ({ request }) => {
     const userData: UserInput = userSchema.parse(await request.json());
 
     if (userData.username === 'existingUser') {

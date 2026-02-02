@@ -24,6 +24,7 @@ import PageContainer from './PageContainer';
 import { type LogisticsUser } from '@/types/LogisticsUser';
 import axiosInstance from '@/lib/axiosInstance';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const apiEndpoint = '/users';
 
@@ -68,6 +69,8 @@ async function fetchUsers(): Promise<LogisticsUser[]> {
 }
 
 export default function UsersTable() {
+  const router = useRouter();
+
   // Component state
   const [users, setUsers] = React.useState<LogisticsUser[]>([]); // List of users displayed
   const [loading, setLoading] = React.useState<boolean>(true); // Loading indicator
@@ -95,7 +98,7 @@ export default function UsersTable() {
 
   // Navigate to the user registration page
   const handleCreate = () => {
-    console.log('Navigating to create user page');
+    router.push('/dashboard/users/register');
   };
 
   // Navigate to the edit page for a given user

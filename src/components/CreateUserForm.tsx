@@ -1,3 +1,10 @@
+/**
+ * Form component for creating a new user.
+ *
+ * Handles client-side validation using Zod and displays
+ * field-level API errors returned from the backend.
+ * Submission logic is delegated to the parent component.
+ */
 import {
   Box,
   Button,
@@ -10,7 +17,7 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { styled } from '@mui/material/styles';
 import { userSchema, UserInput } from '@/schemas/userSchema';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const FormGrid = styled(Grid2)(() => ({
@@ -18,26 +25,33 @@ const FormGrid = styled(Grid2)(() => ({
   flexDirection: 'column',
 }));
 
-export default function RegisterUserForm({
+type Props = {
+  /** Callback invoked with validated form data */
+  onSubmit: SubmitHandler<UserInput>;
+  /** Indicates whether a submission is in progress */
+  isLoading: boolean;
+  /** API-level validation or server errors mapped by field name */
+  apiResponse?: Record<string, string>;
+};
+
+export default function CreateUserForm({
   onSubmit,
   apiResponse,
   isLoading,
-}: Readonly<{
-  onSubmit: SubmitHandler<UserInput>;
-  apiResponse?: Record<string, string>;
-  isLoading: boolean;
-}>) {
+}: Readonly<Props>) {
+  // react-hook-form handles form state and integrates schema validation via Zod
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<UserInput>({
     resolver: zodResolver(userSchema),
   });
 
-  const handleFormSubmit = (data: FieldValues) => {
-    onSubmit(data as UserInput);
+  const handleFormSubmit: SubmitHandler<UserInput> = (data) => {
+    onSubmit(data);
   };
+
   return (
     <Box
       component="form"
