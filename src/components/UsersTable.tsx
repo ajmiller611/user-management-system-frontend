@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PageContainer from './PageContainer';
 import { type LogisticsUser } from '@/types/LogisticsUser';
-import { fetchUsers } from '@/lib/api/users';
+import { fetchUsers, deleteUser } from '@/lib/api/users';
 import { useRouter } from 'next/navigation';
 
 export default function UsersTable() {
@@ -65,7 +65,21 @@ export default function UsersTable() {
 
   // Delete a user with a confirmation prompt
   const handleDelete = async (user: LogisticsUser) => {
-    console.log('Deleting user:', user);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete user "${user.username}"?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+    try {
+      setLoading(true);
+      await deleteUser(user.userId);
+      await loadUsers();
+      setLoading(false);
+    } catch (err) {
+      setError((err as Error).message);
+    }
   };
 
   // Define columns for the DataGrid
