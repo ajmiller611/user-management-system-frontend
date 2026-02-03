@@ -1,10 +1,17 @@
 import { http, HttpResponse } from 'msw';
-import { UserInput, userSchema } from '@/schemas/userSchema';
+import { CreateUserInput, createUserSchema } from '@/schemas/userSchema';
+
+export const mockUser = {
+  userId: 1,
+  username: 'user1',
+  email: 'user1@example.com',
+};
 
 export const handlers = [
   http.post('/users', async ({ request }) => {
-    const userData: UserInput = userSchema.parse(await request.json());
-
+    const userData: CreateUserInput = createUserSchema.parse(
+      await request.json(),
+    );
     if (userData.username === 'existingUser') {
       return HttpResponse.json(
         { message: 'Username already taken' },
@@ -18,5 +25,12 @@ export const handlers = [
       { message: 'User created successfully!' },
       { status: 201 },
     );
+  }),
+  http.get('/users/:userId', () => {
+    return HttpResponse.json({ data: mockUser });
+  }),
+  http.put('/users/:userId', async ({ request }) => {
+    const body = await request.json();
+    return HttpResponse.json({ data: body });
   }),
 ];

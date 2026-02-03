@@ -1,9 +1,8 @@
 /**
- * Form component for creating a new user.
+ * Form component for editing an existing user.
  *
- * Handles client-side validation using Zod and displays
- * field-level API errors returned from the backend.
- * Submission logic is delegated to the parent component.
+ * Receives initial user data from the parent and submits
+ * updated values without owning persistence logic.
  */
 import {
   Box,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { styled } from '@mui/material/styles';
-import { createUserSchema, CreateUserInput } from '@/schemas/userSchema';
+import { editUserSchema, EditUserInput } from '@/schemas/userSchema';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -26,36 +25,40 @@ const FormGrid = styled(Grid2)(() => ({
 }));
 
 type Props = {
-  /** Callback invoked with validated form data */
-  onSubmit: SubmitHandler<CreateUserInput>;
+  /** Initial values loaded from backend for editing */
+  defaultValues: { username: string; email: string };
+  /** Submit handler provided by page-level component */
+  onSubmit: SubmitHandler<EditUserInput>;
   /** Indicates whether a submission is in progress */
   isLoading: boolean;
-  /** API-level validation or server errors mapped by field name */
+  /** Server-side validation or API errors mapped by field */
   apiResponse?: Record<string, string>;
 };
 
-export default function CreateUserForm({
+export default function EditUserForm({
+  defaultValues,
   onSubmit,
   apiResponse,
   isLoading,
 }: Readonly<Props>) {
-  // react-hook-form handles form state and integrates schema validation via Zod
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<EditUserInput>({
+    resolver: zodResolver(editUserSchema),
+    defaultValues,
   });
 
-  const handleFormSubmit: SubmitHandler<CreateUserInput> = (data) => {
+  // Forward validated form data to parent submit handler
+  const handleFormSubmit: SubmitHandler<EditUserInput> = (data) => {
     onSubmit(data);
   };
 
   return (
     <Box
       component="form"
-      aria-label="user registration form"
+      aria-label="user edit form"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       {apiResponse?.success && (
@@ -78,7 +81,6 @@ export default function CreateUserForm({
           <OutlinedInput
             id="username"
             type="text"
-            placeholder="username"
             required
             size="small"
             autoFocus
@@ -94,34 +96,12 @@ export default function CreateUserForm({
           )}
         </FormGrid>
         <FormGrid size={{ xs: 12, md: 6 }}>
-          <FormLabel htmlFor="password" required>
-            Password
-          </FormLabel>
-          <OutlinedInput
-            id="password"
-            type="password"
-            placeholder="password"
-            required
-            size="small"
-            {...register('password')}
-          />
-          {errors.password && (
-            <FormHelperText error>
-              {(errors.password as { message: string }).message}
-            </FormHelperText>
-          )}
-          {apiResponse?.password && (
-            <FormHelperText error>{apiResponse.password}</FormHelperText>
-          )}
-        </FormGrid>
-        <FormGrid size={{ xs: 12, md: 6 }}>
           <FormLabel htmlFor="email" required>
             Email
           </FormLabel>
           <OutlinedInput
             id="email"
             type="email"
-            placeholder="email@example.com"
             required
             size="small"
             {...register('email')}

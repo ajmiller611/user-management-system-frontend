@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UsersTable from '@/components/UsersTable';
 import { fetchUsers } from '@/lib/api/users';
@@ -20,7 +20,13 @@ const mockedFetchUsers = fetchUsers as jest.MockedFunction<typeof fetchUsers>;
 describe('UsersTable Unit Tests', () => {
   beforeEach(() => {
     pushMock.mockClear();
-    mockedFetchUsers.mockResolvedValue([]);
+    mockedFetchUsers.mockResolvedValue([
+      {
+        userId: 1,
+        username: 'user1',
+        email: 'user1@example.com',
+      },
+    ]);
   });
 
   test('renders title, create button, and refresh button', async () => {
@@ -41,5 +47,16 @@ describe('UsersTable Unit Tests', () => {
     );
 
     expect(pushMock).toHaveBeenCalledWith('/dashboard/users/register');
+  });
+
+  test('edit button navigates to edit page for user', async () => {
+    render(<UsersTable />);
+
+    await waitFor(() => expect(screen.getByText('user1')).toBeInTheDocument());
+
+    const editButton = screen.getAllByLabelText('Edit');
+    await userEvent.click(editButton[0]);
+
+    expect(pushMock).toHaveBeenCalledWith('/dashboard/users/1/edit');
   });
 });

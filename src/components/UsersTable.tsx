@@ -60,7 +60,7 @@ export default function UsersTable() {
 
   // Navigate to the edit page for a given user
   const handleEdit = (user: LogisticsUser) => {
-    console.log('Navigating to edit user page for user:', user);
+    router.push(`/dashboard/users/${user.userId}/edit`);
   };
 
   // Delete a user with a confirmation prompt

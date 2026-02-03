@@ -8,7 +8,7 @@
 'use client';
 import { useState } from 'react';
 import CreateUserForm from '@/components/CreateUserForm';
-import { UserInput } from '@/schemas/userSchema';
+import { CreateUserInput } from '@/schemas/userSchema';
 import axiosInstance from '@/lib/axiosInstance';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -26,7 +26,7 @@ export default function RegisterUserPage() {
    * Handles submission from the CreateUserForm.
    * Sends user data to backend, handles success and errors.
    */
-  const handleUserSubmit = async (data: UserInput) => {
+  const handleUserSubmit = async (data: CreateUserInput) => {
     console.log('User data submitted: ', data);
     setIsLoading(true);
     setApiResponse({}); // Clear previous API messages
