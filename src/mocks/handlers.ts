@@ -8,7 +8,7 @@ export const mockUser = {
 };
 
 export const handlers = [
-  http.post(/\/users$/, async ({ request }) => {
+  http.post('/users', async ({ request }) => {
     const userData: CreateUserInput = createUserSchema.parse(
       await request.json(),
     );
@@ -26,10 +26,10 @@ export const handlers = [
       { status: 201 },
     );
   }),
-  http.get(/\/users\/\d+$/, () => {
+  http.get('/users/:userId', () => {
     return HttpResponse.json({ data: mockUser });
   }),
-  http.put(/\/users\/\d+$/, async ({ request }) => {
+  http.put('/users/:userId', async ({ request }) => {
     const body = await request.json();
     return HttpResponse.json({ data: body });
   }),
