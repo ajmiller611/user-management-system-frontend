@@ -1,42 +1,61 @@
+/**
+ * Page component for registering a new user.
+ *
+ * Renders the CreateUserForm and handles submission to the backend API.
+ * Displays success or error messages returned from the server and
+ * redirects to the users dashboard on successful creation.
+ */
 'use client';
-import { Box } from '@mui/material';
 import { useState } from 'react';
-import RegisterUserForm from '@/components/RegisterUserForm';
-import { UserInput } from '@/schemas/userSchema';
+import CreateUserForm from '@/components/CreateUserForm';
+import { CreateUserInput } from '@/schemas/userSchema';
 import axiosInstance from '@/lib/axiosInstance';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-const apiEndpoint = '/users/';
+const apiEndpoint = '/users';
 
 export default function RegisterUserPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiResponse, setApiResponse] = useState<Record<string, string>>({});
-  const handleUserSubmit = async (data: UserInput) => {
+  const router = useRouter();
+
+  // Local state
+  const [isLoading, setIsLoading] = useState(false); // Tracks form submission state
+  const [apiResponse, setApiResponse] = useState<Record<string, string>>({}); // Holds field-specific or general API errors
+
+  /**
+   * Handles submission from the CreateUserForm.
+   * Sends user data to backend, handles success and errors.
+   */
+  const handleUserSubmit = async (data: CreateUserInput) => {
     console.log('User data submitted: ', data);
     setIsLoading(true);
-    setApiResponse({}); // Clear previous errors
+    setApiResponse({}); // Clear previous API messages
     try {
       const response = await axiosInstance.post(apiEndpoint, data);
       console.log('Response:', response);
+
       if (response.status === 201) {
+        // User created successfully
         console.log('User created successfully: ', response.data);
         setApiResponse({ success: 'User created successfully!' });
+        router.push('/dashboard/users'); // Redirect to users list
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
+        // Backend responded with an error
         if (error.response) {
           switch (error.response.status) {
-            case 409: // Conflict
+            case 409: // Conflict: username/email already exists
               console.error('User already exists: ', error.response.data);
               setApiResponse({ username: error.response.data.message });
               break;
-            case 400: // Bad Request
+            case 400: // Bad Request: validation error
               console.error('Invalid input: ', error.response.data);
               setApiResponse({
                 error: 'Invalid input. Please check your data and try again.',
               });
               break;
-            default:
+            default: // Other server-side errors
               console.error('An error occurred: ', error.response.data);
               setApiResponse({
                 error: 'An error occurred. Please try again later. ',
@@ -44,12 +63,14 @@ export default function RegisterUserPage() {
               break;
           }
         } else {
+          // Network or no response
           console.error('No response received: ', error.message);
           setApiResponse({
             error: 'An error with the server occurred. Please try again later.',
           });
         }
       } else {
+        // Unexpected errors
         console.error('An unexpected error occurred: ', error);
         setApiResponse({
           error: 'An unexpected error occurred. Please try again later.',
@@ -60,13 +81,12 @@ export default function RegisterUserPage() {
     }
   };
 
+  // Render form with submission handler, loading state, and API messages
   return (
-    <Box>
-      <RegisterUserForm
-        onSubmit={handleUserSubmit}
-        isLoading={isLoading}
-        apiResponse={apiResponse}
-      />
-    </Box>
+    <CreateUserForm
+      onSubmit={handleUserSubmit}
+      isLoading={isLoading}
+      apiResponse={apiResponse}
+    />
   );
 }
