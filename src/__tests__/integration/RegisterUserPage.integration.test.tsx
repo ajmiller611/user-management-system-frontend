@@ -3,6 +3,7 @@ import { server } from '@/mocks/server';
 import { http, HttpResponse } from 'msw';
 import userEvent from '@testing-library/user-event';
 import RegisterUserPage from '@/app/dashboard/users/register/page';
+import { api } from '@/mocks/api';
 
 const pushMock = jest.fn();
 
@@ -11,8 +12,6 @@ jest.mock('next/navigation', () => ({
     push: pushMock,
   }),
 }));
-
-const apiEndpoint = '/users';
 
 describe('RegisterUserPage Integration Tests', () => {
   beforeEach(() => {
@@ -42,7 +41,7 @@ describe('RegisterUserPage Integration Tests', () => {
 
   test('shows username conflict error (409)', async () => {
     server.use(
-      http.post(apiEndpoint, async () => {
+      http.post(api.users(), async () => {
         return HttpResponse.json(
           { message: 'Username already taken' },
           { status: 409 },
@@ -63,7 +62,7 @@ describe('RegisterUserPage Integration Tests', () => {
 
   test('shows validation error (400)', async () => {
     server.use(
-      http.post(apiEndpoint, async () => {
+      http.post(api.users(), async () => {
         return HttpResponse.json({ message: 'Invalid input' }, { status: 400 });
       }),
     );
@@ -81,7 +80,7 @@ describe('RegisterUserPage Integration Tests', () => {
 
   test('shows generic server error for unexpected status', async () => {
     server.use(
-      http.post(apiEndpoint, async () => {
+      http.post(api.users(), async () => {
         return HttpResponse.json({ message: 'Server error' }, { status: 500 });
       }),
     );

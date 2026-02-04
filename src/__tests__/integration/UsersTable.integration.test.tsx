@@ -4,6 +4,7 @@ import { server } from '@/mocks/server';
 import { http, HttpResponse } from 'msw';
 import UsersTable from '@/components/UsersTable';
 import { type LogisticsUser } from '@/types/LogisticsUser';
+import { api } from '@/mocks/api';
 
 const pushMock = jest.fn();
 
@@ -12,8 +13,6 @@ jest.mock('next/navigation', () => ({
     push: pushMock,
   }),
 }));
-
-const apiEndpoint = '/users';
 
 const mockUsers: LogisticsUser[] = [
   { userId: 1, username: 'user1', email: 'user1@example.com' },
@@ -25,7 +24,7 @@ describe('UsersTable Integration Tests', () => {
     pushMock.mockClear();
 
     server.use(
-      http.get(apiEndpoint, async () => {
+      http.get(api.users(), async () => {
         return HttpResponse.json({
           status: 'success',
           message: 'Users fetched successfully',
@@ -53,7 +52,7 @@ describe('UsersTable Integration Tests', () => {
 
   test('shows error message when fetching users fails', async () => {
     server.use(
-      http.get(apiEndpoint, async () => {
+      http.get(api.users(), async () => {
         return HttpResponse.json({ message: 'server error' }, { status: 500 });
       }),
     );
