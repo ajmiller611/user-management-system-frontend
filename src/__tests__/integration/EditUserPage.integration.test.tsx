@@ -13,6 +13,8 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+const apiEndpoint = '*/users/:userId';
+
 describe('Edit User Page Integration Tests', () => {
   test('shows loading state while fetching user', async () => {
     render(<EditUserPage />);
@@ -34,7 +36,7 @@ describe('Edit User Page Integration Tests', () => {
 
   test('shows error when user fetch fails', async () => {
     server.use(
-      http.get('/users/:userId', () => {
+      http.get(apiEndpoint, () => {
         return HttpResponse.error();
       }),
     );
@@ -63,7 +65,7 @@ describe('Edit User Page Integration Tests', () => {
 
   test('shows error message when update fails', async () => {
     server.use(
-      http.put('/users/:userId', () => {
+      http.put(apiEndpoint, () => {
         return HttpResponse.json({ message: 'Update failed' }, { status: 400 });
       }),
     );

@@ -13,7 +13,7 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-const apiEndpoint = '/users';
+const apiEndpoint = '*/users';
 
 const mockUsers: LogisticsUser[] = [
   { userId: 1, username: 'user1', email: 'user1@example.com' },
