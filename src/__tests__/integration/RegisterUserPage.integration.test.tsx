@@ -12,7 +12,7 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-const apiEndpoint = '/users';
+const apiEndpoint = '*/users';
 
 describe('RegisterUserPage Integration Tests', () => {
   beforeEach(() => {

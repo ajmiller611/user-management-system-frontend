@@ -7,16 +7,16 @@ export const mockUser = {
 };
 
 export const handlers = [
-  http.post('/users', async () => {
+  http.post('*/users', async () => {
     return HttpResponse.json(
       { message: 'User created successfully!' },
       { status: 201 },
     );
   }),
-  http.get('/users/:userId', () => {
+  http.get('*/users/:userId', () => {
     return HttpResponse.json({ data: mockUser });
   }),
-  http.put('/users/:userId', async ({ request }) => {
+  http.put('*/users/:userId', async ({ request }) => {
     const body = await request.json();
     return HttpResponse.json({ data: body });
   }),
