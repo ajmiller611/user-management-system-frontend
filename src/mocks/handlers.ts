@@ -1,5 +1,4 @@
 import { http, HttpResponse } from 'msw';
-import { CreateUserInput, createUserSchema } from '@/schemas/userSchema';
 
 export const mockUser = {
   userId: 1,
@@ -8,19 +7,7 @@ export const mockUser = {
 };
 
 export const handlers = [
-  http.post('/users', async ({ request }) => {
-    const userData: CreateUserInput = createUserSchema.parse(
-      await request.json(),
-    );
-    if (userData.username === 'existingUser') {
-      return HttpResponse.json(
-        { message: 'Username already taken' },
-        { status: 409 },
-      );
-    } else if (userData.username === 'invalidUsername') {
-      return HttpResponse.json({ message: 'Invalid input' }, { status: 400 });
-    }
-
+  http.post('/users', async () => {
     return HttpResponse.json(
       { message: 'User created successfully!' },
       { status: 201 },

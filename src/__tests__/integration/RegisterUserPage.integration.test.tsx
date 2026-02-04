@@ -19,8 +19,6 @@ describe('RegisterUserPage Integration Tests', () => {
     pushMock.mockClear();
   });
 
-  afterEach(() => server.resetHandlers());
-
   const fillAndSubmitForm = async () => {
     await userEvent.type(screen.getByLabelText(/username/i), 'testUser');
     await userEvent.type(screen.getByLabelText(/password/i), 'Test@1234');
