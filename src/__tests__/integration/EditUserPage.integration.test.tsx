@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import EditUserPage from '@/app/dashboard/users/[userId]/edit/page';
 import { server } from '@/mocks/server';
 import { http, HttpResponse } from 'msw';
+import { api } from '@/mocks/api';
 
 const pushMock = jest.fn();
 
@@ -12,8 +13,6 @@ jest.mock('next/navigation', () => ({
     push: pushMock,
   }),
 }));
-
-const apiEndpoint = '*/users/:userId';
 
 describe('Edit User Page Integration Tests', () => {
   test('shows loading state while fetching user', async () => {
@@ -36,7 +35,7 @@ describe('Edit User Page Integration Tests', () => {
 
   test('shows error when user fetch fails', async () => {
     server.use(
-      http.get(apiEndpoint, () => {
+      http.get(api.userById(), () => {
         return HttpResponse.error();
       }),
     );
@@ -65,7 +64,7 @@ describe('Edit User Page Integration Tests', () => {
 
   test('shows error message when update fails', async () => {
     server.use(
-      http.put(apiEndpoint, () => {
+      http.put(api.userById(), () => {
         return HttpResponse.json({ message: 'Update failed' }, { status: 400 });
       }),
     );
