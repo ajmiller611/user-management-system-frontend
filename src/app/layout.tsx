@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout({
   children,
@@ -21,7 +22,8 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             {/*adds Material UI baseline CSS(standardized base styles)*/}
             <CssBaseline />
-            {children}
+            {/*provides authentication context to the app*/}
+            <AuthProvider>{children}</AuthProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
