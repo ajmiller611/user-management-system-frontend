@@ -20,6 +20,7 @@ import Toolbar from '@mui/material/Toolbar';
 import DashboardHeader from '@/components/DashboardHeader';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
 
 type DashboardLayoutProps = {
   children?: React.ReactNode;
@@ -29,6 +30,7 @@ export default function DashboardLayout({
   children,
 }: Readonly<DashboardLayoutProps>) {
   const theme = useTheme();
+  const { logout } = useAuth();
 
   // Controls visibility of the sidebar on mobile screens
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState<boolean>(false);
@@ -37,6 +39,14 @@ export default function DashboardLayout({
 
   const handleToggleMobileNav = () => {
     setIsMobileNavOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    try {
+      logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   /**
@@ -71,6 +81,7 @@ export default function DashboardLayout({
         title="Dashboard"
         showMenuButton={!isDesktop}
         onMenuClick={handleToggleMobileNav}
+        onLogout={handleLogout}
       />
       <DashboardSidebar
         open={isMobileNavOpen}
