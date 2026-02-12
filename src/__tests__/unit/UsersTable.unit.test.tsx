@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UsersTable from '@/components/UsersTable';
 import { deleteUser, fetchUsers } from '@/lib/api/users';
+import { useAuth } from '@/context/AuthContext';
 
 const pushMock = jest.fn();
 
@@ -16,6 +17,14 @@ jest.mock('@/lib/api/users', () => ({
   deleteUser: jest.fn(),
 }));
 
+const mockAdminAuth = { user: { roles: ['ADMIN'] }, loading: false };
+const mockUserAuth = { user: { roles: ['USER'] }, loading: false };
+
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: jest.fn(),
+}));
+const mockedUseAuth = useAuth as jest.Mock;
+
 const mockedFetchUsers = fetchUsers as jest.MockedFunction<typeof fetchUsers>;
 const mockedDeleteUser = deleteUser as jest.MockedFunction<typeof deleteUser>;
 
@@ -27,16 +36,15 @@ const mockUsers = [
   },
 ];
 
-describe('UsersTable Unit Tests', () => {
+describe('UsersTable Unit Tests - Admin user', () => {
   beforeEach(() => {
     pushMock.mockClear();
-    mockedFetchUsers.mockResolvedValue([
-      {
-        userId: 1,
-        username: 'user1',
-        email: 'user1@example.com',
-      },
-    ]);
+    mockedUseAuth.mockReturnValue(mockAdminAuth);
+    mockedFetchUsers.mockResolvedValue(mockUsers);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('renders title, create button, and refresh button', async () => {
@@ -123,5 +131,35 @@ describe('UsersTable Unit Tests', () => {
     expect(
       await screen.findByText(/failed to delete user/i),
     ).toBeInTheDocument();
+  });
+});
+
+describe('UsersTable Unit Tests - Non-Admin user', () => {
+  beforeEach(() => {
+    pushMock.mockClear();
+    mockedUseAuth.mockReturnValue(mockUserAuth);
+    mockedFetchUsers.mockResolvedValue(mockUsers);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('does not render create button', async () => {
+    render(<UsersTable />);
+
+    expect(await screen.findByText('Users')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /create/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  test('does not render edit or delete buttons', async () => {
+    render(<UsersTable />);
+
+    await screen.findByText('user1');
+
+    expect(screen.queryByLabelText(/edit/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/delete/i)).not.toBeInTheDocument();
   });
 });

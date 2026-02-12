@@ -5,6 +5,7 @@ import { http, HttpResponse } from 'msw';
 import UsersTable from '@/components/UsersTable';
 import { type LogisticsUser } from '@/types/LogisticsUser';
 import { api } from '@/mocks/api';
+import { useAuth } from '@/context/AuthContext';
 
 const pushMock = jest.fn();
 
@@ -12,6 +13,13 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: pushMock,
   }),
+}));
+
+const mockedUseAuth = useAuth as jest.Mock;
+const mockAdminAuth = { user: { roles: ['ADMIN'] }, loading: false };
+
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: jest.fn(),
 }));
 
 const mockUsers: LogisticsUser[] = [
@@ -22,6 +30,7 @@ const mockUsers: LogisticsUser[] = [
 describe('UsersTable Integration Tests', () => {
   beforeEach(() => {
     pushMock.mockClear();
+    mockedUseAuth.mockReturnValue(mockAdminAuth);
 
     server.use(
       http.get(api.users(), async () => {
@@ -76,16 +85,5 @@ describe('UsersTable Integration Tests', () => {
         expect(screen.getByText(user.username)).toBeInTheDocument();
       });
     }
-  });
-
-  test('renders edit and delete buttons for each user row', async () => {
-    render(<UsersTable />);
-
-    await waitFor(() => {
-      Array.from({ length: mockUsers.length }).forEach(() => {
-        expect(screen.getAllByLabelText('Edit')[0]).toBeInTheDocument();
-        expect(screen.getAllByLabelText('Delete')[0]).toBeInTheDocument();
-      });
-    });
   });
 });
