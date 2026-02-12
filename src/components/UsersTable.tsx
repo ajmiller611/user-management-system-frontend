@@ -24,8 +24,11 @@ import PageContainer from './PageContainer';
 import { type LogisticsUser } from '@/types/LogisticsUser';
 import { fetchUsers, deleteUser } from '@/lib/api/users';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function UsersTable() {
+  const { user: authUser, loading: authLoading } = useAuth();
+  const isAdmin = authUser?.roles.includes('ADMIN');
   const router = useRouter();
 
   // Component state
@@ -50,6 +53,9 @@ export default function UsersTable() {
   React.useEffect(() => {
     loadUsers();
   }, [loadUsers]);
+
+  // Don't render until auth state is known
+  if (authLoading) return null;
 
   const handleRefresh = () => loadUsers();
 
@@ -88,26 +94,30 @@ export default function UsersTable() {
     { field: 'userId', headerName: 'ID', width: 80 },
     { field: 'username', headerName: 'Username', width: 150 },
     { field: 'email', headerName: 'Email', width: 200 },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      type: 'actions',
-      width: 120,
-      getActions: ({ row }) => [
-        <GridActionsCellItem
-          key="edit-item"
-          icon={<EditIcon />}
-          label="Edit"
-          onClick={() => handleEdit(row as LogisticsUser)}
-        />,
-        <GridActionsCellItem
-          key="delete-item"
-          icon={<DeleteIcon />}
-          label="Delete"
-          onClick={() => handleDelete(row as LogisticsUser)}
-        />,
-      ],
-    },
+    ...(isAdmin
+      ? [
+          {
+            field: 'actions',
+            headerName: 'Actions',
+            type: 'actions' as const,
+            width: 120,
+            getActions: ({ row }: { row: LogisticsUser }) => [
+              <GridActionsCellItem
+                key="edit-item"
+                icon={<EditIcon />}
+                label="Edit"
+                onClick={() => handleEdit(row)}
+              />,
+              <GridActionsCellItem
+                key="delete-item"
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={() => handleDelete(row)}
+              />,
+            ],
+          },
+        ]
+      : []),
   ];
 
   // PageContainer wraps table with title and action buttons
@@ -120,13 +130,15 @@ export default function UsersTable() {
           <IconButton onClick={handleRefresh} aria-label="refresh">
             <RefreshIcon />
           </IconButton>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleCreate}
-          >
-            Create
-          </Button>
+          {isAdmin && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
+          )}
         </Stack>
       }
     >

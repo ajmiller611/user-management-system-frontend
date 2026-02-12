@@ -4,14 +4,29 @@ import { http, HttpResponse } from 'msw';
 import userEvent from '@testing-library/user-event';
 import RegisterUserPage from '@/app/dashboard/users/register/page';
 import { api } from '@/mocks/api';
+import { AuthUser, useAuth } from '@/context/AuthContext';
 
+jest.mock('@/context/AuthContext');
 const pushMock = jest.fn();
-
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: pushMock,
   }),
 }));
+
+const adminUser: AuthUser = {
+  userId: 1,
+  username: 'admin',
+  email: 'admin@example.com',
+  roles: ['ADMIN'],
+};
+const mockedUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
+mockedUseAuth.mockReturnValue({
+  user: adminUser,
+  loading: false,
+  login: jest.fn(),
+  logout: jest.fn(),
+});
 
 describe('RegisterUserPage Integration Tests', () => {
   beforeEach(() => {

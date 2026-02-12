@@ -6,21 +6,34 @@
  * redirects to the users dashboard on successful creation.
  */
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateUserForm from '@/components/CreateUserForm';
 import { CreateUserInput } from '@/schemas/userSchema';
 import axiosInstance from '@/lib/axiosInstance';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 const apiEndpoint = '/users';
 
 export default function RegisterUserPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user && !user.roles.includes('ADMIN')) {
+      router.replace('/dashboard/users');
+    }
+  }, [user, loading, router]);
 
   // Local state
   const [isLoading, setIsLoading] = useState(false); // Tracks form submission state
   const [apiResponse, setApiResponse] = useState<Record<string, string>>({}); // Holds field-specific or general API errors
+
+  // Don't render form until auth state is known
+  if (loading || !user?.roles.includes('ADMIN')) {
+    return null;
+  }
 
   /**
    * Handles submission from the CreateUserForm.

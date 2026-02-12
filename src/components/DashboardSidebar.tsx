@@ -105,6 +105,7 @@ export default function DashboardSidebar({
               width: DRAWER_WIDTH,
             },
           }}
+          data-testid="dashboard-sidebar"
         >
           {drawerContent}
         </Drawer>
@@ -121,6 +122,7 @@ export default function DashboardSidebar({
               boxSizing: 'border-box',
             },
           }}
+          data-testid="dashboard-sidebar"
         >
           {drawerContent}
         </Drawer>

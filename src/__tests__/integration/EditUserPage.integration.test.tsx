@@ -4,7 +4,9 @@ import EditUserPage from '@/app/dashboard/users/[userId]/edit/page';
 import { server } from '@/mocks/server';
 import { http, HttpResponse } from 'msw';
 import { api } from '@/mocks/api';
+import { AuthUser, useAuth } from '@/context/AuthContext';
 
+jest.mock('@/context/AuthContext');
 const pushMock = jest.fn();
 
 jest.mock('next/navigation', () => ({
@@ -13,6 +15,20 @@ jest.mock('next/navigation', () => ({
     push: pushMock,
   }),
 }));
+
+const adminUser: AuthUser = {
+  userId: 1,
+  username: 'admin',
+  email: 'admin@example.com',
+  roles: ['ADMIN'],
+};
+const mockedUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
+mockedUseAuth.mockReturnValue({
+  user: adminUser,
+  loading: false,
+  login: jest.fn(),
+  logout: jest.fn(),
+});
 
 describe('Edit User Page Integration Tests', () => {
   test('shows loading state while fetching user', async () => {

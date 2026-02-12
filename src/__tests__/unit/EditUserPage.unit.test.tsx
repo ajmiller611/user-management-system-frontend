@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import RegisterUserPage from '@/app/dashboard/users/register/page';
+import EditUserPage from '@/app/dashboard/users/[userId]/edit/page';
 import { useAuth, AuthUser } from '@/context/AuthContext';
 
 jest.mock('@/context/AuthContext');
@@ -23,14 +23,15 @@ const regularUser: AuthUser = {
 const replaceMock = jest.fn();
 
 jest.mock('next/navigation', () => ({
+  useParams: () => ({ userId: '1' }),
   useRouter: () => ({
     push: jest.fn(),
     replace: replaceMock,
   }),
 }));
 
-describe('RegisterUserPage Unit Tests', () => {
-  test('renders form for ADMIN users', () => {
+describe('EditUserPage Unit Tests', () => {
+  test('renders page for ADMIN users', async () => {
     mockedUseAuth.mockReturnValue({
       user: adminUser,
       loading: false,
@@ -38,14 +39,12 @@ describe('RegisterUserPage Unit Tests', () => {
       logout: jest.fn(),
     });
 
-    render(<RegisterUserPage />);
+    render(<EditUserPage />);
 
-    expect(
-      screen.getByRole('form', { name: 'user registration form' }),
-    ).toBeInTheDocument();
+    expect(await screen.findByLabelText(/username/i)).toBeInTheDocument();
   });
 
-  test('does not render form for non-ADMIN users and redirects', () => {
+  test('does not render form for non-admin users and redirects', () => {
     mockedUseAuth.mockReturnValue({
       user: regularUser,
       loading: false,
@@ -53,7 +52,7 @@ describe('RegisterUserPage Unit Tests', () => {
       logout: jest.fn(),
     });
 
-    const { container } = render(<RegisterUserPage />);
+    const { container } = render(<EditUserPage />);
     expect(container).toBeEmptyDOMElement();
     expect(replaceMock).toHaveBeenCalledWith('/dashboard/users');
   });

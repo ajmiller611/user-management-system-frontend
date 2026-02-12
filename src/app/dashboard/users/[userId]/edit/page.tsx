@@ -7,6 +7,7 @@ import axiosInstance from '@/lib/axiosInstance';
 import axios from 'axios';
 import EditUserForm from '@/components/EditUserForm';
 import { EditUserInput } from '@/schemas/userSchema';
+import { useAuth } from '@/context/AuthContext';
 
 // Shape of user data returned by the backend for edit operations
 interface UserResponse {
@@ -24,6 +25,7 @@ interface UserResponse {
 export default function EditUserPage() {
   const { userId } = useParams<{ userId: string }>();
   const router = useRouter();
+  const { user: authUser, loading } = useAuth();
 
   const [user, setUser] = useState<UserResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +50,17 @@ export default function EditUserPage() {
 
     fetchUser();
   }, [userId]);
+
+  useEffect(() => {
+    if (!loading && authUser && !authUser.roles.includes('ADMIN')) {
+      router.replace('/dashboard/users');
+    }
+  }, [authUser, loading, router]);
+
+  // Don't render until auth state is known
+  if (loading || !authUser?.roles.includes('ADMIN')) {
+    return null;
+  }
 
   // Submit updated user details and return to users list on success
   const handleUpdateUser = async (data: EditUserInput) => {
