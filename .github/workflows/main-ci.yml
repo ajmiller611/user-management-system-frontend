@@ -35,7 +35,7 @@ jobs:
 
       - name: Check Prettier Formatting
         run: npx prettier --check .
-      
+
       - name: Lint Code
         run: npm run lint
 
