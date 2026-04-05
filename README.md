@@ -1,176 +1,218 @@
-<a id="readme-top"></a>
+# User Management System (Frontend)
 
-[![Build Status][build-shield]][build-status-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+Frontend for a role-based user management system, showcasing modern development with Next.js, TypeScript, and secure authentication.
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ajmiller611_military-logistics-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ajmiller611_military-logistics-frontend)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ajmiller611_military-logistics-frontend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ajmiller611_military-logistics-frontend)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ajmiller611_military-logistics-frontend&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ajmiller611_military-logistics-frontend)
-[![codecov](https://codecov.io/github/ajmiller611/military-logistics-frontend/branch/main/graph/badge.svg?token=9ZX6JXVOHZ)](https://codecov.io/github/ajmiller611/military-logistics-frontend)
-<br />
+---
 
-<div align="center">
-<h3 align="center">Military Logistics Management System</h3>
+## Overview
 
-  <p align="center">
-    A portfolio project
-    <br />
-    <a href="https://github.com/ajmiller611/military-logistics-frontend"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/ajmiller611/military-logistics-frontend">View Demo</a>
-    ·
-    <a href="https://github.com/ajmiller611/military-logistics-frontend/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/ajmiller611/military-logistics-frontend/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
-</div>
+This project is a frontend dashboard application that simulates an internal user management system.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+- Admin users can perform full CRUD operations
+- Regular users have read-only access
+- Integrates with a Spring Boot backend for authentication and data
 
-<!-- ABOUT THE PROJECT -->
+The application mimics patterns commonly found in internal enterprise tools and is designed to showcase frontend architecture, authentication flows, and real-world development practices.
 
-## About The Project
+---
 
-[![Program Screenshot Placeholder][product-screenshot]](https://example.com)
+## Tech Stack
 
-This is the front-end project for the Military Logistics Management System, a portfolio project designed to showcase my skills in building full-stack, professional web applications. It is my first experience using the Next.js framework, React, TypeScript, and Redux.
+### Core
 
-The application fetches data from a Spring Boot API backend and provides an interactive dashboard for managing users. It also handles JWT access and refresh token storage for secure authentication and authorization.
+- Next.js 15
+- React 19
+- TypeScript
 
-The military logistics management system presents unique challenges, especially in terms of efficiently handling supply chain data and ensuring that users can easily interact with and manage this data.
+### UI / Frontend
 
-Future enhancements will include integrating AI capabilities to predict future supply needs and further improving the user interface for planning and service management.<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- Material UI (MUI)
 
-### Built With
+### Authentication & Security
 
-- [![Next.js][Next.js]][Next.js-url]
-- [![React][React.js]][React-url]
-- [![TypeScript][TypeScript]][TypeScript-url]
-- [![Redux][Redux]][Redux-url]
+- NextAuth.js v5
+- JWT-based authentication (via backend)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Data Fetching
 
-<!-- GETTING STARTED -->
+- Axios (custom instance for API communication)
+
+### Forms & Validation
+
+- React Hook Form
+- Zod
+
+### Testing
+
+- Jest
+- React Testing Library
+- Mock Service Worker (MSW)
+
+### Tooling & DevOps
+
+- ESLint
+- Prettier
+- Husky
+- GitHub Actions
+
+---
+
+## Features
+
+- User registration and login
+- Role-based access control (ADMIN, USER)
+- Protected routes
+- Dashboard layout
+- Form validation with Zod
+- Integration with Spring Boot backend API for authentication and data
+- Unit and integration testing
+
+---
+
+## Demo
+
+These users are automatically seeded by the backend on application startup for demonstration purposes.
+
+- Admin User:
+
+  - Email: admin@demo.com
+  - Password: Admin123!
+
+- Regular User:
+  - Email: user@demo.com
+  - Password: User123!
+
+---
+
+## Architecture & Key Concepts
+
+- Separation of concerns through modular folder structure
+- Custom Axios instance for centralized API communication
+- Form validation using React Hook Form + Zod
+- Authentication flow using JWT + refresh tokens via backend
+- Route protection enforced based on authentication and user roles
+- MSW used to mock API responses for testing
+
+---
+
+## Project Structure
+
+```
+src/
+  __tests__/
+    integration/
+    unit/
+  app/            # Next.js routes and layouts
+  components/     # Reusable UI components
+  context/        # React context providers
+  lib/            # Utilities (Axios instance, helpers)
+  mocks/          # MSW handlers
+  schemas/        # Zod validation schemas
+  types/          # TypeScript types
+  theme.ts        # MUI theme
+```
+
+---
+
+## Authentication Flow
+
+1. User submits login credentials
+2. Frontend sends credentials to backend API
+3. Backend returns:
+   - JWT access token
+   - Refresh token
+4. Frontend includes JWT in authenticated requests
+5. When expired, refresh token is used to obtain a new JWT
+
+---
 
 ## Getting Started
 
-To set up a local environment for this project, follow the below steps. To be updated and extended more later.
-
 ### Prerequisites
 
-- Download Node.js from [official website][Node.js-url].
-  <br>
-  Open the terminal and verify version ## with the following command:
-
-  ```sh
-  node -v
-  ```
-
-- Install npm (Node Package Manager) for managing React dependencies.
-  ```sh
-  npm install npm@latest -g
-  ```
+- Node.js (v18+)
+- npm or yarn
+- Running Spring Boot backend
 
 ### Installation
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/ajmiller611/military-logistics-frontend.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
+```bash
+git clone https://github.com/ajmiller611/user-management-system-frontend.git
+cd user-management-system-frontend
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```bash
+npm install
+```
 
-<!-- USAGE EXAMPLES -->
+### Run Application
 
-## Usage
+```bash
+npm run dev
+```
 
-To be added later.
+---
 
-<!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
+## Testing Strategy
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- Unit tests: Validate individual components and logic
+- Integration tests: Verify component interactions and flows
+- Mocking: MSW simulates backend responses
 
-<!-- ROADMAP -->
+```bash
+npm test
+```
 
-## Roadmap
+---
 
-- [ ] Add Pages
-  - [ ] Home
-  - [ ] Admin
-  - [ ] Users
-  - [ ] Inventory Management
-- [ ] Data visualization
-- [ ] AI predictions
+## CI/CD
 
-See the [open issues](https://github.com/ajmiller611/military-logistics-frontend/issues) for a full list of proposed features (and known issues).
+GitHub Actions pipeline:
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- Installs dependencies
+- Runs tests
+- Ensures build passes before merge
 
-<!-- LICENSE -->
+---
 
-## License
+## Environment Variables
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Create a `.env` file and configure the following:
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
+```
 
-<!-- CONTACT -->
+A `.env.example` file is provided as a reference configuration.
+
+---
+
+## Future Improvements
+
+- Deployment
+- Code coverage reporting
+- Improved UI/UX
+
+---
+
+## Related Projects
+
+- Backend: https://github.com/ajmiller611/user-management-system-backend
+
+---
+
+## Disclaimer
+
+This project is a portfolio project intended to demonstrate technical skills.
+
+---
 
 ## Contact
 
-Andrew Miller - [![LinkedIn][linkedin-shield]][linkedin-url] - ajmiller611@live.com
+Andrew J. Miller
 
-Project Link: [https://github.com/ajmiller611/military-logistics-frontend](https://github.com/ajmiller611/military-logistics-frontend)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-
-[build-shield]: https://img.shields.io/github/actions/workflow/status/ajmiller611/military-logistics-mgmt/main-ci.yml?style=for-the-badge
-[build-status-url]: https://github.com/ajmiller611/military-logistics-mgmt/actions/workflows/main-ci.yml/badge.svg
-[issues-shield]: https://img.shields.io/github/issues/ajmiller611/military-logistics-mgmt.svg?style=for-the-badge
-[issues-url]: https://github.com/ajmiller611/military-logistics-mgmt/issues
-[license-shield]: https://img.shields.io/github/license/ajmiller611/military-logistics-mgmt.svg?style=for-the-badge
-[license-url]: https://github.com/ajmiller611/military-logistics-mgmt/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/ajmiller611
-[product-screenshot]: images/screenshot.png
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next.js-url]: https://nextjs.org/
-[TypeScript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
-[TypeScript-url]: https://www.typescriptlang.org/
-[Redux]: https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white
-[Redux-url]: https://redux.js.org/
-[SonarLint]: https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=SONARLINT&logoColor=white
-[SonarLint-url]: https://www.sonarsource.com/products/sonarlint/
+- GitHub: https://github.com/ajmiller611
+- LinkedIn: https://linkedin.com/in/ajmiller611
+- Email: ajmiller611@live.com

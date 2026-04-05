@@ -41,6 +41,9 @@ yarn-error.log*
 .env.production.local
 .env.testing.local
 
+# allow env example file
+!.env.example
+
 # typescript
 *.tsbuildinfo
 
