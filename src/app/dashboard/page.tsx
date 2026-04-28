@@ -2,263 +2,292 @@
 
 import {
   Container,
-  Box,
+  Grid2,
   Typography,
   List,
   ListItem,
   ListItemText,
+  Box,
   Link,
-  Grid2,
+  Divider,
 } from '@mui/material';
+import { useEffect } from 'react';
 
-/**
- * DashboardPage
- *
- * Root page for the Military Logistics Management System portfolio project.
- * Provides an overview of the project, implemented features, technical stack,
- * and navigation links to detailed sections.
- *
- * Focused on demonstrating full-stack development skills using:
- * - Next.js, React, TypeScript, and MUI on the frontend
- * - Spring Boot, PostgreSQL/H2, and JWT authentication on the backend
- * - User management with CRUD operations and role-based authorization
- */
+export default function Home() {
+  useEffect(() => {
+    const handleAnchorScroll = (e: MouseEvent) => {
+      if (e.target instanceof HTMLAnchorElement && e.target.hash) {
+        const targetElement = document.querySelector(e.target.hash);
 
-export default function DashboardPage() {
+        if (targetElement) {
+          const appBarHeight = 64;
+          const offset =
+            window.scrollY +
+            targetElement.getBoundingClientRect().top -
+            appBarHeight;
+
+          window.scrollTo({
+            top: offset,
+            behavior: 'smooth',
+          });
+
+          e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('click', handleAnchorScroll);
+
+    return () => {
+      window.removeEventListener('click', handleAnchorScroll);
+    };
+  }, []);
+
   return (
     <Container maxWidth="lg">
-      {/* Welcome Section */}
-      <Box mb={4}>
-        <Typography variant="h3" gutterBottom>
-          Military Logistics Management System
-        </Typography>
-        <Typography variant="body1">
-          A professional full-stack portfolio project showcasing a user
-          management system with authentication, authorization, and CRUD
-          functionality.
-        </Typography>
-      </Box>
+      <header>
+        <Box mb={5}>
+          <Typography variant="h3" gutterBottom>
+            User Management System
+          </Typography>
+          <Typography variant="body1">
+            A full-stack portfolio project demonstrating secure authentication,
+            role-based access control, administrative workflows, and
+            production-style engineering practices.
+          </Typography>
+        </Box>
 
-      {/* Navigation Links */}
-      <Box mb={4}>
-        <Typography variant="h5">Navigation</Typography>
-        <List>
-          {[
-            { label: 'About', href: '#about' },
-            { label: 'Project Goals', href: '#goals' },
-            { label: 'Technical Highlights', href: '#highlights' },
-            { label: 'Frontend Tech Stack', href: '#front' },
-            { label: 'Backend Tech Stack', href: '#back' },
-            { label: 'Documentation & Resources', href: '#docs' },
-            { label: 'Contact Me', href: '#contact' },
-          ].map((item) => (
-            <ListItem key={item.href}>
+        <Box mb={5}>
+          <Typography variant="h5" gutterBottom>
+            Navigation
+          </Typography>
+          <List>
+            <ListItem>
               <ListItemText>
-                <Link href={item.href} color="inherit">
-                  {item.label}
+                <Link href="#overview" color="inherit">
+                  Project Overview
                 </Link>
               </ListItemText>
             </ListItem>
-          ))}
-        </List>
-      </Box>
+            <ListItem>
+              <ListItemText>
+                <Link href="#highlights" color="inherit">
+                  Technical Highlights
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText>
+                <Link href="#frontend" color="inherit">
+                  Frontend Stack
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText>
+                <Link href="#backend" color="inherit">
+                  Backend Stack
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText>
+                <Link href="#architecture" color="inherit">
+                  Architecture
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText>
+                <Link href="#testing" color="inherit">
+                  Testing & CI/CD
+                </Link>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText>
+                <Link href="#goals" color="inherit">
+                  Project Goals
+                </Link>
+              </ListItemText>
+            </ListItem>
+          </List>
+        </Box>
+      </header>
 
-      {/* About Section */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="about">
-          About the Project
-        </Typography>
-        <Typography variant="body1">
-          This project demonstrates the ability to build a full-stack web
-          application with a focus on user management. It showcases clean code
-          practices, API integration, and a professional UI using modern
-          frameworks.
-        </Typography>
-      </Box>
+      <Divider sx={{ mb: 4 }} />
 
-      {/* Project Goals */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="goals">
-          Project Goals
+      <section id="overview">
+        <Typography variant="h4" gutterBottom>
+          Project Overview
         </Typography>
-        <List>
-          <ListItem>
-            <ListItemText
-              primary="User Management"
-              secondary="Implement CRUD functionality for users with proper validation and API integration."
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Authentication & Authorization"
-              secondary="Secure the application using JWT tokens and role-based access control."
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Professional Frontend"
-              secondary="Build a clean and responsive UI using Next.js, React, TypeScript, and MUI."
-            />
-          </ListItem>
-        </List>
-      </Box>
+        <Typography variant="body1" paragraph>
+          This application simulates an internal enterprise user management
+          platform. It provides role-based access control where administrators
+          can perform full CRUD operations, while standard users have restricted
+          read-only access.
+        </Typography>
+        <Typography variant="body1" paragraph>
+          The system is built as a separated full-stack architecture with a
+          Next.js frontend and Spring Boot backend, designed to demonstrate
+          real-world authentication flows, secure API integration, and scalable
+          software structure.
+        </Typography>
+      </section>
 
-      {/* Technical Highlights */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="highlights">
+      <section id="highlights">
+        <Typography variant="h4" gutterBottom>
           Technical Highlights
         </Typography>
         <List>
           <ListItem>
-            <ListItemText
-              primary="CRUD Operations"
-              secondary="Manage users and supplies with full Create, Read, Update, Delete functionality."
-            />
+            <ListItemText primary="Secure authentication with JWT access tokens and refresh token workflow" />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary="Authentication and Authorization"
-              secondary="JWT-based authentication with role-based access control."
-            />
+            <ListItemText primary="Role-based authorization for ADMIN and USER access levels" />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary="Testing"
-              secondary="Unit, integration, and end-to-end tests implemented using Jest, React Testing Library, and Playwright."
-            />
+            <ListItemText primary="Administrative dashboard with protected CRUD functionality" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Production-style testing strategy with unit and integration coverage" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="CI pipeline for automated validation before merge" />
           </ListItem>
         </List>
-      </Box>
+      </section>
 
-      {/* Frontend Tech Stack */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="front">
-          Frontend Tech Stack
+      <section id="frontend">
+        <Typography variant="h4" gutterBottom>
+          Frontend Stack
         </Typography>
         <Grid2 container spacing={4}>
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">Framework & Language</Typography>
+            <Typography variant="h6">Core Technologies</Typography>
             <List>
               <ListItem>
-                <ListItemText primary="Next.js 15 for routing and SSR" />
+                <ListItemText primary="Next.js 15 with App Router" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="React 19 for component-based UI" />
+                <ListItemText primary="React 19" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="TypeScript for type safety and productivity" />
+                <ListItemText primary="TypeScript" />
               </ListItem>
             </List>
           </Grid2>
+
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">UI & Styling</Typography>
+            <Typography variant="h6">Frontend Engineering</Typography>
             <List>
               <ListItem>
-                <ListItemText primary="MUI (Material-UI) for pre-built components" />
+                <ListItemText primary="Material UI for dashboard interface" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Custom CSS modules for additional styling" />
-              </ListItem>
-            </List>
-          </Grid2>
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">State & Data</Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary="React Hook Form + Zod for form validation" />
+                <ListItemText primary="React Hook Form + Zod validation" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Axios for REST API calls" />
-              </ListItem>
-            </List>
-          </Grid2>
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">Testing & QA</Typography>
-            <List>
-              <ListItem>
-                <ListItemText
-                  primary="Jest & React Testing Library"
-                  secondary="Unit and integration tests for components and pages."
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Playwright"
-                  secondary="End-to-end tests simulating user workflows."
-                />
+                <ListItemText primary="Axios-based API communication" />
               </ListItem>
             </List>
           </Grid2>
         </Grid2>
-      </Box>
+      </section>
 
-      {/* Backend Tech Stack */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="back">
-          Backend Tech Stack
+      <section id="backend">
+        <Typography variant="h4" gutterBottom>
+          Backend Stack
         </Typography>
         <Grid2 container spacing={4}>
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">Framework & API</Typography>
+            <Typography variant="h6">Core Technologies</Typography>
             <List>
               <ListItem>
-                <ListItemText primary="Spring Boot for REST API development" />
+                <ListItemText primary="Java 21 + Spring Boot" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Spring Security for authentication and authorization" />
+                <ListItemText primary="Spring Security + OAuth2 Resource Server" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Spring Data JPA for database operations" />
+                <ListItemText primary="Spring Data JPA" />
               </ListItem>
             </List>
           </Grid2>
+
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6">Database</Typography>
+            <Typography variant="h6">Infrastructure</Typography>
             <List>
               <ListItem>
-                <ListItemText primary="PostgreSQL for production data" />
+                <ListItemText primary="PostgreSQL + H2" />
               </ListItem>
               <ListItem>
-                <ListItemText primary="H2 in-memory database for testing" />
+                <ListItemText primary="Docker Compose" />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="GitHub Actions + SonarCloud" />
               </ListItem>
             </List>
           </Grid2>
         </Grid2>
-      </Box>
+      </section>
 
-      {/* Documentation & Contact */}
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="docs">
-          Documentation & Resources
+      <section id="architecture">
+        <Typography variant="h4" gutterBottom>
+          Architecture
         </Typography>
-        <Typography variant="body1">
-          API documentation and additional resources can be found in the GitHub
-          repository.
+        <Typography variant="body1" paragraph>
+          The frontend follows a modular structure with reusable components,
+          centralized API handling, and protected routing. The backend applies a
+          layered architecture with clear separation between controllers,
+          services, and repositories.
         </Typography>
-      </Box>
+        <Typography variant="body1" paragraph>
+          Together, both applications model production-style engineering
+          practices including authentication lifecycle management, secure data
+          exchange, validation, and maintainable code organization.
+        </Typography>
+      </section>
 
-      <Box mb={4}>
-        <Typography variant="h4" gutterBottom id="contact">
-          Contact Me
+      <section id="testing">
+        <Typography variant="h4" gutterBottom>
+          Testing & CI/CD
         </Typography>
-        <Typography variant="body1">Andrew Miller</Typography>
-        <Typography variant="body1">
-          <Link href="mailto:youremail@example.com">Email</Link>
+        <List>
+          <ListItem>
+            <ListItemText primary="Frontend unit and integration tests with Jest, Testing Library, and MSW" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Backend unit and integration tests with H2 and PostgreSQL" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Automated GitHub Actions workflows for build and validation" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Code quality enforcement with ESLint, Prettier, Husky, Checkstyle, and SonarCloud" />
+          </ListItem>
+        </List>
+      </section>
+
+      <section id="goals">
+        <Typography variant="h4" gutterBottom>
+          Project Goals
         </Typography>
-        <Typography variant="body1">
-          <Link
-            href="https://www.linkedin.com/in/your-linkedin"
-            target="_blank"
-          >
-            LinkedIn
-          </Link>
-        </Typography>
-        <Typography variant="body1">
-          <Link href="https://github.com/your-github" target="_blank">
-            GitHub
-          </Link>
-        </Typography>
-      </Box>
+        <List>
+          <ListItem>
+            <ListItemText primary="Demonstrate full-stack engineering capability across frontend and backend systems" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Showcase secure authentication and authorization design" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Apply professional development workflows and testing strategy" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Build a portfolio-ready project aligned with production standards" />
+          </ListItem>
+        </List>
+      </section>
     </Container>
   );
 }
