@@ -1,6 +1,6 @@
 # User Management System (Frontend)
 
-Frontend for a role-based user management system, showcasing modern development with Next.js, TypeScript, and secure authentication.
+A deployed frontend dashboard for a role-based user management system, built with Next.js, TypeScript, and secure authentication practices.
 
 ---
 
@@ -16,6 +16,33 @@ The application mimics patterns commonly found in internal enterprise tools and 
 
 ---
 
+## Live Demo
+
+- **Frontend**: https://user-management-frontend-ashy-two.vercel.app
+- **Backend API**: https://user-management-backend-6zmq.onrender.com
+
+The backend API may return 401 at root endpoints as authentication is required.
+
+### Demo Credentials
+
+**Admin Access**
+
+- Username: admin
+- Password: P@ssword!123
+
+---
+
+## Suggested Reviewer Flow
+
+1. Log in using the admin account
+2. Navigate to the Users dashboard
+3. Create a new user
+4. Edit an existing user
+5. Log out and sign in as the newly created user
+6. Observe role-based permissions
+
+---
+
 ## Tech Stack
 
 ### Core
@@ -23,6 +50,12 @@ The application mimics patterns commonly found in internal enterprise tools and 
 - Next.js 15
 - React 19
 - TypeScript
+
+### Deployment
+
+- Frontend hosted on Vercel
+- Backend hosted on Render
+- Database hosted on Neon PostgreSQL
 
 ### UI / Frontend
 
@@ -69,21 +102,6 @@ The application mimics patterns commonly found in internal enterprise tools and 
 
 ---
 
-## Demo
-
-These users are automatically seeded by the backend on application startup for demonstration purposes.
-
-- Admin User:
-
-  - Email: admin@demo.com
-  - Password: Admin123!
-
-- Regular User:
-  - Email: user@demo.com
-  - Password: User123!
-
----
-
 ## Architecture & Key Concepts
 
 - Separation of concerns through modular folder structure
@@ -121,34 +139,40 @@ src/
 3. Backend returns:
    - JWT access token
    - Refresh token
-4. Frontend includes JWT in authenticated requests
-5. When expired, refresh token is used to obtain a new JWT
+4. Frontend establishes an authenticated session and includes the JWT in protected API requests
+5. When the access token expires, the refresh token is used automatically to obtain a new JWT
 
 ---
 
 ## Getting Started
 
+For local development, clone the repository and configure the required environment variables before running the application.
+
 ### Prerequisites
 
 - Node.js (v18+)
 - npm or yarn
-- Running Spring Boot backend
+- Access to the companion Spring Boot backend (local or deployed)
 
 ### Installation
 
 ```bash
 git clone https://github.com/ajmiller611/user-management-system-frontend.git
 cd user-management-system-frontend
-```
-
-```bash
 npm install
+npm run dev
 ```
 
-### Run Application
+---
 
-```bash
-npm run dev
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and update values as needed:
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
 ```
 
 ---
@@ -175,25 +199,11 @@ GitHub Actions pipeline:
 
 ---
 
-## Environment Variables
-
-Create a `.env` file and configure the following:
-
-```
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-NEXTAUTH_SECRET=your-nextauth-secret
-NEXTAUTH_URL=http://localhost:3000
-```
-
-A `.env.example` file is provided as a reference configuration.
-
----
-
 ## Future Improvements
 
-- Deployment
-- Code coverage reporting
-- Improved UI/UX
+- Expanded role and permission management system
+- Performance optimization for large datasets
+- End-to-end test coverage for critical user flows
 
 ---
 
