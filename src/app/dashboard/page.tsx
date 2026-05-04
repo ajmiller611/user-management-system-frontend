@@ -11,37 +11,8 @@ import {
   Link,
   Divider,
 } from '@mui/material';
-import { useEffect } from 'react';
 
 export default function Home() {
-  useEffect(() => {
-    const handleAnchorScroll = (e: MouseEvent) => {
-      if (e.target instanceof HTMLAnchorElement && e.target.hash) {
-        const targetElement = document.querySelector(e.target.hash);
-
-        if (targetElement) {
-          const appBarHeight = 64;
-          const offset =
-            window.scrollY +
-            targetElement.getBoundingClientRect().top -
-            appBarHeight;
-
-          window.scrollTo({
-            top: offset,
-            behavior: 'smooth',
-          });
-
-          e.preventDefault();
-        }
-      }
-    };
-
-    window.addEventListener('click', handleAnchorScroll);
-
-    return () => {
-      window.removeEventListener('click', handleAnchorScroll);
-    };
-  }, []);
 
   return (
     <Container maxWidth="lg">
