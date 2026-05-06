@@ -1,18 +1,38 @@
 # User Management System (Frontend)
 
-A deployed frontend dashboard for a role-based user management system, built with Next.js, TypeScript, and secure authentication practices.
+A production-style Next.js frontend dashboard for a role-based user management system with authentication, admin operations, and full-stack integration.
 
 ---
 
-## Overview
+## Engineering Highlights
 
-This project is a frontend dashboard application that simulates an internal user management system.
+### Authentication & Security
 
-- Admin users can perform full CRUD operations
-- Regular users have read-only access
-- Integrates with a Spring Boot backend for authentication and data
+- JWT-based authentication with refresh token handling (backend-driven)
+- Role-based access control (ADMIN / USER)
+- Protected routes and session-aware UI rendering
 
-The application mimics patterns commonly found in internal enterprise tools and is designed to showcase frontend architecture, authentication flows, and real-world development practices.
+### Frontend Architecture
+
+- Modular Next.js App Router structure
+- Centralized API layer using custom Axios instance
+- Separation of UI, state, and service logic
+
+### Form & State Management
+
+- Schema-based validation using React Hook Form + Zod
+- Controlled form state with reusable validation patterns
+
+### Testing Strategy
+
+- Unit tests for components and utilities
+- Integration tests for user flows
+- API mocking with MSW for isolated frontend testing
+
+### Deployment & End-to-End System
+
+- Fully integrated with Spring Boot backend (authentication, CRUD operations, admin actions)
+- Deployed end-to-end system (Vercel + Render + PostgreSQL)
 
 ---
 
@@ -27,19 +47,13 @@ The backend API may return 401 at root endpoints as authentication is required.
 
 **Admin Access**
 
-- Username: admin
-- Password: P@ssword!123
+- Username: `admin`
+- Password: `admin123`
 
----
+**User Access**
 
-## Suggested Reviewer Flow
-
-1. Log in using the admin account
-2. Navigate to the Users dashboard
-3. Create a new user
-4. Edit an existing user
-5. Log out and sign in as the newly created user
-6. Observe role-based permissions
+- Username: `user1`
+- Password: `user123`
 
 ---
 
@@ -51,27 +65,15 @@ The backend API may return 401 at root endpoints as authentication is required.
 - React 19
 - TypeScript
 
-### Deployment
-
-- Frontend hosted on Vercel
-- Backend hosted on Render
-- Database hosted on Neon PostgreSQL
-
-### UI / Frontend
-
-- Material UI (MUI)
-
-### Authentication & Security
+### Authentication & Data
 
 - NextAuth.js v5
-- JWT-based authentication (via backend)
+- JWT (backend-driven auth)
+- Axios (custom client)
 
-### Data Fetching
+### UI & Forms
 
-- Axios (custom instance for API communication)
-
-### Forms & Validation
-
+- Material UI (MUI)
 - React Hook Form
 - Zod
 
@@ -81,66 +83,21 @@ The backend API may return 401 at root endpoints as authentication is required.
 - React Testing Library
 - Mock Service Worker (MSW)
 
-### Tooling & DevOps
+### DevOps
 
-- ESLint
-- Prettier
-- Husky
-- GitHub Actions
+- Vercel deployment
+- GitHub Actions CI
+- ESLint, Prettier, Husky
 
 ---
 
 ## Features
 
-- User registration and login
-- Role-based access control (ADMIN, USER)
-- Protected routes
-- Dashboard layout
-- Form validation with Zod
-- Integration with Spring Boot backend API for authentication and data
-- Unit and integration testing
-
----
-
-## Architecture & Key Concepts
-
-- Separation of concerns through modular folder structure
-- Custom Axios instance for centralized API communication
-- Form validation using React Hook Form + Zod
-- Authentication flow using JWT + refresh tokens via backend
-- Route protection enforced based on authentication and user roles
-- MSW used to mock API responses for testing
-
----
-
-## Project Structure
-
-```
-src/
-  __tests__/
-    integration/
-    unit/
-  app/            # Next.js routes and layouts
-  components/     # Reusable UI components
-  context/        # React context providers
-  lib/            # Utilities (Axios instance, helpers)
-  mocks/          # MSW handlers
-  schemas/        # Zod validation schemas
-  types/          # TypeScript types
-  theme.ts        # MUI theme
-```
-
----
-
-## Authentication Flow
-
-1. User submits login credentials
-2. Frontend sends credentials to backend API
-3. Backend returns:
-   - JWT access token
-   - Refresh token
-4. Frontend establishes an authenticated session and includes the JWT in protected API requests
-5. When the access token expires, the refresh token is used automatically to obtain a new JWT
+- Full CRUD user management (admin-only)
+- Role-based protected routes
+- Persistent authentication via JWT
+- Form validation for user inputs
+- Admin demo reset system integration
 
 ---
 
@@ -171,7 +128,7 @@ Copy `.env.example` to `.env.local` and update values as needed:
 
 ```
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-NEXTAUTH_SECRET=your-nextauth-secret
+AUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
 ```
 
