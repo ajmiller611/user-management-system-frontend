@@ -53,7 +53,7 @@ export default function DashboardLayout({
 
   const handleResetDemo = async () => {
     const confirmed = window.confirm(
-      'Are you sure you want to reset the demo? This will delete and recreate all demo data.'
+      'Are you sure you want to reset the demo? This will delete and recreate all demo data.',
     );
     if (!confirmed) {
       return;
