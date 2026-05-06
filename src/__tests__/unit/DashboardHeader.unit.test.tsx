@@ -15,6 +15,7 @@ describe('DashboardHeader', () => {
       showMenuButton: true,
       onMenuClick: jest.fn(),
       onLogout: jest.fn(),
+      onResetDemo: jest.fn(),
     };
 
     return render(
@@ -65,5 +66,16 @@ describe('DashboardHeader', () => {
     await userEvent.click(logoutButton);
 
     expect(onLogout).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onResetDemo when reset demo button is clicked', async () => {
+    const onResetDemo = jest.fn();
+
+    renderHeader({ onResetDemo });
+
+    const resetDemoButton = screen.getByRole('button', { name: /reset demo/i });
+    await userEvent.click(resetDemoButton);
+
+    expect(onResetDemo).toHaveBeenCalledTimes(1);
   });
 });

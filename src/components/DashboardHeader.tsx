@@ -52,6 +52,8 @@ export interface DashboardHeaderProps {
   onMenuClick: () => void;
   /** Callback triggered when the logout button is clicked */
   onLogout: () => void;
+  /** Callback triggered when the reset demo button is clicked */
+  onResetDemo: () => void;
 }
 
 /**
@@ -69,6 +71,7 @@ export default function DashboardHeader({
   showMenuButton,
   onMenuClick,
   onLogout,
+  onResetDemo
 }: Readonly<DashboardHeaderProps>) {
   const theme = useTheme();
 
@@ -125,15 +128,27 @@ export default function DashboardHeader({
             </Link>
           </Stack>
 
-          <Button
-            color="secondary"
-            variant="outlined"
-            size="small"
-            onClick={onLogout}
-            sx={{ ml: 2 }}
-          >
-            Logout
-          </Button>
+          <Stack direction="row" alignItems="center">
+            <Button
+              color="error"
+              variant="outlined"
+              size="small"
+              onClick={onResetDemo}
+              sx={{ ml: 2 }}
+            >
+              Reset Demo
+            </Button>
+
+            <Button
+              color="secondary"
+              variant="outlined"
+              size="small"
+              onClick={onLogout}
+              sx={{ ml: 2 }}
+            >
+              Logout
+            </Button>
+          </Stack>
         </Stack>
       </Toolbar>
     </AppBar>

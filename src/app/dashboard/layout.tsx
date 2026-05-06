@@ -13,7 +13,9 @@
  */
 'use client';
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
+import axiosInstance from '@/lib/axiosInstance';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -29,12 +31,13 @@ type DashboardLayoutProps = {
 export default function DashboardLayout({
   children,
 }: Readonly<DashboardLayoutProps>) {
+  const router = useRouter();
   const theme = useTheme();
   const { logout } = useAuth();
 
   // Controls visibility of the sidebar on mobile screens
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState<boolean>(false);
-
+  const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
   const handleToggleMobileNav = () => {
@@ -46,6 +49,18 @@ export default function DashboardLayout({
       logout();
     } catch (error) {
       console.error('Logout failed:', error);
+    }
+  };
+
+  const handleResetDemo = async () => {
+    try {
+      await axiosInstance.post('/admin/demo/reset');
+
+      logout();
+
+      router.push('/login');
+    } catch (error) {
+      console.error('Reset demo failed:', error);
     }
   };
 
@@ -82,6 +97,7 @@ export default function DashboardLayout({
         showMenuButton={!isDesktop}
         onMenuClick={handleToggleMobileNav}
         onLogout={handleLogout}
+        onResetDemo={handleResetDemo}
       />
       <DashboardSidebar
         open={isMobileNavOpen}
