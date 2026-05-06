@@ -71,7 +71,7 @@ export default function DashboardHeader({
   showMenuButton,
   onMenuClick,
   onLogout,
-  onResetDemo
+  onResetDemo,
 }: Readonly<DashboardHeaderProps>) {
   const theme = useTheme();
 
