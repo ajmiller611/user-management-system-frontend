@@ -53,7 +53,7 @@ export interface DashboardHeaderProps {
   /** Callback triggered when the logout button is clicked */
   onLogout: () => void;
   /** Callback triggered when the reset demo button is clicked */
-  onResetDemo: () => void;
+  onResetDemo?: () => void;
 }
 
 /**
@@ -129,15 +129,17 @@ export default function DashboardHeader({
           </Stack>
 
           <Stack direction="row" alignItems="center">
-            <Button
-              color="error"
-              variant="outlined"
-              size="small"
-              onClick={onResetDemo}
-              sx={{ ml: 2 }}
-            >
-              Reset Demo
-            </Button>
+            {onResetDemo && (
+              <Button
+                color="error"
+                variant="outlined"
+                size="small"
+                onClick={onResetDemo}
+                sx={{ ml: 2 }}
+              >
+                Reset Demo
+              </Button>
+            )}
 
             <Button
               color="secondary"
