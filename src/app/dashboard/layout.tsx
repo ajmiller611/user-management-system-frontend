@@ -34,6 +34,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const theme = useTheme();
   const { logout } = useAuth();
+  const { user } = useAuth();
+  const isAdmin = user?.roles?.includes('ADMIN');
 
   // Controls visibility of the sidebar on mobile screens
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState<boolean>(false);
@@ -102,7 +104,7 @@ export default function DashboardLayout({
         showMenuButton={!isDesktop}
         onMenuClick={handleToggleMobileNav}
         onLogout={handleLogout}
-        onResetDemo={handleResetDemo}
+        onResetDemo={isAdmin ? handleResetDemo : undefined}
       />
       <DashboardSidebar
         open={isMobileNavOpen}
