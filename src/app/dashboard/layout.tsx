@@ -37,7 +37,6 @@ export default function DashboardLayout({
 
   // Controls visibility of the sidebar on mobile screens
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState<boolean>(false);
-  const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
   const handleToggleMobileNav = () => {
@@ -53,6 +52,12 @@ export default function DashboardLayout({
   };
 
   const handleResetDemo = async () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to reset the demo? This will delete and recreate all demo data.'
+    );
+    if (!confirmed) {
+      return;
+    }
     try {
       await axiosInstance.post('/admin/demo/reset');
 
