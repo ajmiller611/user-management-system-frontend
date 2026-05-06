@@ -7,25 +7,30 @@ A production-style Next.js frontend dashboard for a role-based user management s
 ## Engineering Highlights
 
 ### Authentication & Security
+
 - JWT-based authentication with refresh token handling (backend-driven)
 - Role-based access control (ADMIN / USER)
 - Protected routes and session-aware UI rendering
 
 ### Frontend Architecture
+
 - Modular Next.js App Router structure
 - Centralized API layer using custom Axios instance
 - Separation of UI, state, and service logic
 
 ### Form & State Management
+
 - Schema-based validation using React Hook Form + Zod
 - Controlled form state with reusable validation patterns
 
 ### Testing Strategy
+
 - Unit tests for components and utilities
 - Integration tests for user flows
 - API mocking with MSW for isolated frontend testing
 
 ### Deployment & End-to-End System
+
 - Fully integrated with Spring Boot backend (authentication, CRUD operations, admin actions)
 - Deployed end-to-end system (Vercel + Render + PostgreSQL)
 
