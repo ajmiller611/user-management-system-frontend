@@ -36,11 +36,18 @@ const mockUsers = [
   },
 ];
 
+const mockPagedResponse = {
+  data: mockUsers,
+  currentPage: 0,
+  totalPages: 5,
+  totalItems: 47,
+};
+
 describe('UsersTable Unit Tests - Admin user', () => {
   beforeEach(() => {
     pushMock.mockClear();
     mockedUseAuth.mockReturnValue(mockAdminAuth);
-    mockedFetchUsers.mockResolvedValue(mockUsers);
+    mockedFetchUsers.mockResolvedValue(mockPagedResponse);
   });
 
   afterEach(() => {
@@ -60,6 +67,8 @@ describe('UsersTable Unit Tests - Admin user', () => {
     expect(
       screen.getByRole('button', { name: /refresh/i }),
     ).toBeInTheDocument();
+
+    expect(fetchUsers).toHaveBeenCalledWith(0, 10);
   });
 
   test('create button navigates to /dashboard/users/register', async () => {
@@ -82,6 +91,51 @@ describe('UsersTable Unit Tests - Admin user', () => {
     expect(pushMock).toHaveBeenCalledWith('/dashboard/invitations');
   });
 
+  test('loads the next page of users when the next page button is clicked', async () => {
+    const secondPageResponse = {
+      ...mockPagedResponse,
+      data: [
+        {
+          userId: 2,
+          username: 'user2',
+          email: 'user2@example.com',
+        },
+      ],
+      currentPage: 1,
+    };
+
+    mockedFetchUsers
+      .mockResolvedValueOnce(mockPagedResponse)
+      .mockResolvedValueOnce(secondPageResponse);
+
+    render(<UsersTable />);
+
+    //Wait for the first page to load
+    expect(await screen.findByText('user1')).toBeInTheDocument();
+
+    //Navigate to the next page
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+    await userEvent.click(nextPageButton);
+
+    expect(await screen.findByText('user2')).toBeInTheDocument();
+  });
+
+  test('loads users with the new page size when the page size is changed', async () => {
+    render(<UsersTable />);
+
+    expect(await screen.findByText('user1')).toBeInTheDocument();
+
+    const pageSizeSelector = screen.getByRole('combobox', {
+      name: /rows per page/i,
+    });
+    await userEvent.click(pageSizeSelector);
+    await userEvent.click(screen.getByRole('option', { name: '25' }));
+
+    await waitFor(() => {
+      expect(mockedFetchUsers).toHaveBeenCalledWith(0, 25);
+    });
+  });
+
   test('edit button navigates to edit page for user', async () => {
     render(<UsersTable />);
 
@@ -94,7 +148,7 @@ describe('UsersTable Unit Tests - Admin user', () => {
   });
 
   test('does not delete user when confirmation is cancelled', async () => {
-    mockedFetchUsers.mockResolvedValue(mockUsers);
+    mockedFetchUsers.mockResolvedValue(mockPagedResponse);
     jest.spyOn(window, 'confirm').mockReturnValue(false);
 
     render(<UsersTable />);
@@ -107,7 +161,7 @@ describe('UsersTable Unit Tests - Admin user', () => {
   });
 
   test('deletes user when confirmation is accepted', async () => {
-    mockedFetchUsers.mockResolvedValue(mockUsers);
+    mockedFetchUsers.mockResolvedValue(mockPagedResponse);
     mockedDeleteUser.mockResolvedValue();
     jest.spyOn(window, 'confirm').mockReturnValue(true);
 
@@ -120,7 +174,12 @@ describe('UsersTable Unit Tests - Admin user', () => {
   });
 
   test('reloads users after successful delete', async () => {
-    mockedFetchUsers.mockResolvedValueOnce(mockUsers).mockResolvedValueOnce([]);
+    mockedFetchUsers
+      .mockResolvedValueOnce(mockPagedResponse)
+      .mockResolvedValueOnce({
+        ...mockPagedResponse,
+        data: [],
+      });
 
     mockedDeleteUser.mockResolvedValue();
     jest.spyOn(window, 'confirm').mockReturnValue(true);
@@ -134,7 +193,7 @@ describe('UsersTable Unit Tests - Admin user', () => {
   });
 
   test('shows error message when delete fails', async () => {
-    mockedFetchUsers.mockResolvedValue(mockUsers);
+    mockedFetchUsers.mockResolvedValue(mockPagedResponse);
     mockedDeleteUser.mockRejectedValue(new Error('Failed to delete user'));
     jest.spyOn(window, 'confirm').mockReturnValue(true);
 
@@ -153,7 +212,7 @@ describe('UsersTable Unit Tests - Non-Admin user', () => {
   beforeEach(() => {
     pushMock.mockClear();
     mockedUseAuth.mockReturnValue(mockUserAuth);
-    mockedFetchUsers.mockResolvedValue(mockUsers);
+    mockedFetchUsers.mockResolvedValue(mockPagedResponse);
   });
 
   afterEach(() => {

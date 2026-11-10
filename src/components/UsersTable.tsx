@@ -15,7 +15,12 @@
 'use client';
 import * as React from 'react';
 import { Box, Button, IconButton, Stack, Alert } from '@mui/material';
-import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridActionsCellItem,
+  GridPaginationModel,
+} from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -35,19 +40,29 @@ export default function UsersTable() {
   const [users, setUsers] = React.useState<User[]>([]); // List of users displayed
   const [loading, setLoading] = React.useState<boolean>(true); // Loading indicator
   const [error, setError] = React.useState<string | null>(null); // Error message from API
+  const [rowCount, setRowCount] = React.useState<number>(0);
+  const [paginationModel, setPaginationModel] =
+    React.useState<GridPaginationModel>({
+      page: 0,
+      pageSize: 10,
+    });
 
   const loadUsers = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchUsers();
-      setUsers(data);
+      const response = await fetchUsers(
+        paginationModel.page,
+        paginationModel.pageSize,
+      );
+      setUsers(response.data);
+      setRowCount(response.totalItems);
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [paginationModel]);
 
   // Fetch users from API on mount or when loadUsers is called
   React.useEffect(() => {
@@ -161,9 +176,10 @@ export default function UsersTable() {
           getRowId={(row) => row.userId}
           loading={loading}
           pageSizeOptions={[5, 10, 25]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
+          paginationMode="server"
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          rowCount={rowCount}
         />
       </Box>
     </PageContainer>
