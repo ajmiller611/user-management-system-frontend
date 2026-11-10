@@ -19,15 +19,25 @@ interface ApiResponse<T> {
 
 /**
  * Fetch all users from the backend API.
- * Returns an array of LogisticsUser objects.
+ * Returns a paged response containing users.
  * Throws an Error if the request fails.
  */
-export async function fetchUsers(): Promise<User[]> {
+export async function fetchUsers(
+  page: number,
+  size: number,
+): Promise<PagedResponse<User>> {
   try {
-    const res =
-      await axiosInstance.get<ApiResponse<PagedResponse<User>>>(apiEndpoint);
+    const res = await axiosInstance.get<ApiResponse<PagedResponse<User>>>(
+      apiEndpoint,
+      {
+        params: {
+          page,
+          size,
+        },
+      },
+    );
 
-    return res.data.data.data;
+    return res.data.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const message =
